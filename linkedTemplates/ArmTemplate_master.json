@@ -1,44 +1,84 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "factoryName": { "type": "string" },
-    "environment": { "type": "string" },
-    "sqlMiConnectionString": { "type": "securestring", "defaultValue": "" },
-    "sqlMiKeyVaultBaseUrl": { "type": "string", "defaultValue": "" },
-    "sqlMiKeyVaultSecretName": { "type": "string", "defaultValue": "" },
-    "blobStorageConnectionString": { "type": "securestring", "defaultValue": "" },
-    "blobKeyVaultBaseUrl": { "type": "string", "defaultValue": "" },
-    "blobKeyVaultSecretName": { "type": "string", "defaultValue": "" },
-    "container": { "type": "string" },
-    "baseFolder": { "type": "string" },
-    "containerUri": { "type": "string" },
-    "containerSasToken": { "type": "string" }
-  },
-  "resources": [
-    {
-      "name": "ADF_ArmTemplate_0",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2024-03-01",
-      "properties": {
-        "mode": "incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
-          "contentVersion": "1.0.0.0"
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "AdfPocTestNew"
         },
-        "parameters": {
-          "factoryName": { "value": "[parameters('factoryName')]" },
-          "environment": { "value": "[parameters('environment')]" },
-          "sqlMiConnectionString": { "value": "[parameters('sqlMiConnectionString')]" },
-          "sqlMiKeyVaultBaseUrl": { "value": "[parameters('sqlMiKeyVaultBaseUrl')]" },
-          "sqlMiKeyVaultSecretName": { "value": "[parameters('sqlMiKeyVaultSecretName')]" },
-          "blobStorageConnectionString": { "value": "[parameters('blobStorageConnectionString')]" },
-          "blobKeyVaultBaseUrl": { "value": "[parameters('blobKeyVaultBaseUrl')]" },
-          "blobKeyVaultSecretName": { "value": "[parameters('blobKeyVaultSecretName')]" },
-          "container": { "value": "[parameters('container')]" },
-          "baseFolder": { "value": "[parameters('baseFolder')]" }
+        "LS_AzureBlob_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'LS_AzureBlob'"
+        },
+        "LS_OnPremSql_password": {
+            "type": "secureString",
+            "metadata": "Secure string for 'password' of 'LS_OnPremSql'"
+        },
+        "LS_OnPremSql_properties_typeProperties_server": {
+            "type": "string",
+            "defaultValue": "adfpocsqlserver123.database.windows.net"
+        },
+        "LS_OnPremSql_properties_typeProperties_database": {
+            "type": "string",
+            "defaultValue": "AdfMetadata"
+        },
+        "LS_OnPremSql_properties_typeProperties_userName": {
+            "type": "string",
+            "defaultValue": "sqladmin"
+        },
+        "AzureKeyVault1_properties_typeProperties_baseUrl": {
+            "type": "string",
+            "defaultValue": "https://bt-sudhakar-eastus-kv-01.vault.azure.net/"
+        },
+        "containerUri": {
+            "type": "string",
+            "metadata": "URI to storage account containing linked ARM templates"
+        },
+        "containerSasToken": {
+            "type": "string",
+            "metadata": "Sas token to storage account containing linked ARM templates"
         }
-      }
-    }
-  ]
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "AdfPocTestNew_ArmTemplate_0",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2024-03-01",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "factoryName": {
+                        "value": "[parameters('factoryName')]"
+                    },
+                    "LS_AzureBlob_connectionString": {
+                        "value": "[parameters('LS_AzureBlob_connectionString')]"
+                    },
+                    "LS_OnPremSql_password": {
+                        "value": "[parameters('LS_OnPremSql_password')]"
+                    },
+                    "LS_OnPremSql_properties_typeProperties_server": {
+                        "value": "[parameters('LS_OnPremSql_properties_typeProperties_server')]"
+                    },
+                    "LS_OnPremSql_properties_typeProperties_database": {
+                        "value": "[parameters('LS_OnPremSql_properties_typeProperties_database')]"
+                    },
+                    "LS_OnPremSql_properties_typeProperties_userName": {
+                        "value": "[parameters('LS_OnPremSql_properties_typeProperties_userName')]"
+                    },
+                    "AzureKeyVault1_properties_typeProperties_baseUrl": {
+                        "value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        }
+    ]
 }

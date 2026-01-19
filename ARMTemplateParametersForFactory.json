@@ -1,16 +1,27 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "factoryName": { "value": "" },
-    "environment": { "value": "dev" },
-    "sqlMiConnectionString": { "value": "" },
-    "sqlMiKeyVaultBaseUrl": { "value": "" },
-    "sqlMiKeyVaultSecretName": { "value": "" },
-    "blobStorageConnectionString": { "value": "" },
-    "blobKeyVaultBaseUrl": { "value": "" },
-    "blobKeyVaultSecretName": { "value": "" },
-    "container": { "value": "" },
-    "baseFolder": { "value": "adf" }
-  }
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "value": "AdfPocTestNew"
+        },
+        "LS_AzureBlob_connectionString": {
+            "value": ""
+        },
+        "LS_OnPremSql_password": {
+            "value": ""
+        },
+        "LS_OnPremSql_properties_typeProperties_server": {
+            "value": "adfpocsqlserver123.database.windows.net"
+        },
+        "LS_OnPremSql_properties_typeProperties_database": {
+            "value": "AdfMetadata"
+        },
+        "LS_OnPremSql_properties_typeProperties_userName": {
+            "value": "sqladmin"
+        },
+        "AzureKeyVault1_properties_typeProperties_baseUrl": {
+            "value": "https://bt-sudhakar-eastus-kv-01.vault.azure.net/"
+        }
+    }
 }
