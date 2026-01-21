@@ -11,10 +11,6 @@
             "type": "secureString",
             "metadata": "Secure string for 'connectionString' of 'LS_AzureBlob'"
         },
-        "LS_OnPremSql_password": {
-            "type": "secureString",
-            "metadata": "Secure string for 'password' of 'LS_OnPremSql'"
-        },
         "LS_OnPremSql_properties_typeProperties_server": {
             "type": "string",
             "defaultValue": "adfpocsqlserver123.database.windows.net"
@@ -25,7 +21,17 @@
         },
         "LS_OnPremSql_properties_typeProperties_userName": {
             "type": "string",
-            "defaultValue": "sqladmin"
+            "defaultValue": "sqladmin",
+            "metadata": "SQL login username for Azure SQL Managed Instance"
+        },
+        "LS_OnPremSql_properties_typeProperties_passwordSecretName": {
+            "type": "string",
+            "metadata": "Key Vault secret name that stores the SQL password"
+        },
+        "LS_OnPremSql_properties_typeProperties_integrationRuntime": {
+            "type": "string",
+            "defaultValue": "SelfHostedIRName",
+            "metadata": "Name of the self-hosted Integration Runtime to use for LS_OnPremSql"
         },
         "AzureKeyVault1_properties_typeProperties_baseUrl": {
             "type": "string",
@@ -61,9 +67,6 @@
                     "LS_AzureBlob_connectionString": {
                         "value": "[parameters('LS_AzureBlob_connectionString')]"
                     },
-                    "LS_OnPremSql_password": {
-                        "value": "[parameters('LS_OnPremSql_password')]"
-                    },
                     "LS_OnPremSql_properties_typeProperties_server": {
                         "value": "[parameters('LS_OnPremSql_properties_typeProperties_server')]"
                     },
@@ -72,6 +75,12 @@
                     },
                     "LS_OnPremSql_properties_typeProperties_userName": {
                         "value": "[parameters('LS_OnPremSql_properties_typeProperties_userName')]"
+                    },
+                    "LS_OnPremSql_properties_typeProperties_passwordSecretName": {
+                        "value": "[parameters('LS_OnPremSql_properties_typeProperties_passwordSecretName')]"
+                    },
+                    "LS_OnPremSql_properties_typeProperties_integrationRuntime": {
+                        "value": "[parameters('LS_OnPremSql_properties_typeProperties_integrationRuntime')]"
                     },
                     "AzureKeyVault1_properties_typeProperties_baseUrl": {
                         "value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"

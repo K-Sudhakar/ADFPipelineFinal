@@ -11,10 +11,6 @@
             "type": "secureString",
             "metadata": "Secure string for 'connectionString' of 'LS_AzureBlob'"
         },
-        "LS_OnPremSql_password": {
-            "type": "secureString",
-            "metadata": "Secure string for 'password' of 'LS_OnPremSql'"
-        },
         "LS_OnPremSql_properties_typeProperties_server": {
             "type": "string",
             "defaultValue": "adfpocsqlserver123.database.windows.net"
@@ -25,7 +21,17 @@
         },
         "LS_OnPremSql_properties_typeProperties_userName": {
             "type": "string",
-            "defaultValue": "sqladmin"
+            "defaultValue": "sqladmin",
+            "metadata": "SQL login username for Azure SQL Managed Instance"
+        },
+        "LS_OnPremSql_properties_typeProperties_passwordSecretName": {
+            "type": "string",
+            "metadata": "Key Vault secret name that stores the SQL password"
+        },
+        "LS_OnPremSql_properties_typeProperties_integrationRuntime": {
+            "type": "string",
+            "defaultValue": "SelfHostedIRName",
+            "metadata": "Name of the self-hosted Integration Runtime to use for AzureSqlMI1"
         },
         "AzureKeyVault1_properties_typeProperties_baseUrl": {
             "type": "string",
@@ -88,7 +94,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "LS_OnPremSql",
+                    "referenceName": "AzureSqlMI1",
                     "type": "LinkedServiceReference"
                 },
                 "parameters": {
@@ -109,7 +115,7 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/LS_OnPremSql')]"
+                "[concat(variables('factoryId'), '/linkedServices/AzureSqlMI1')]"
             ]
         },
         {
@@ -118,7 +124,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "LS_OnPremSql",
+                    "referenceName": "AzureSqlMI1",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
@@ -128,7 +134,7 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/LS_OnPremSql')]"
+                "[concat(variables('factoryId'), '/linkedServices/AzureSqlMI1')]"
             ]
         },
         {
@@ -145,23 +151,26 @@
             "dependsOn": []
         },
         {
-            "name": "[concat(parameters('factoryName'), '/LS_OnPremSql')]",
+            "name": "[concat(parameters('factoryName'), '/AzureSqlMI1')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
                 "annotations": [],
-                "type": "AzureSqlManagedInstance",
+                "type": "AzureSqlDatabase",
                 "typeProperties": {
-                    "server": "[parameters('LS_OnPremSql_properties_typeProperties_server')]",
-                    "database": "[parameters('LS_OnPremSql_properties_typeProperties_database')]",
-                    "encrypt": "mandatory",
-                    "trustServerCertificate": false,
-                    "authenticationType": "SQL",
-                    "userName": "[parameters('LS_OnPremSql_properties_typeProperties_userName')]",
+                    "connectionString": "[concat('Server=tcp:', parameters('LS_OnPremSql_properties_typeProperties_server'), ';Initial Catalog=', parameters('LS_OnPremSql_properties_typeProperties_database'), ';User ID=', parameters('LS_OnPremSql_properties_typeProperties_userName'), ';Encrypt=True;TrustServerCertificate=False')]",
                     "password": {
-                        "type": "SecureString",
-                        "value": "[parameters('LS_OnPremSql_password')]"
+                        "type": "AzureKeyVaultSecret",
+                        "store": {
+                            "referenceName": "AzureKeyVault1",
+                            "type": "LinkedServiceReference"
+                        },
+                        "secretName": "[parameters('LS_OnPremSql_properties_typeProperties_passwordSecretName')]"
                     }
+                },
+                "connectVia": {
+                    "referenceName": "[parameters('LS_OnPremSql_properties_typeProperties_integrationRuntime')]",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
             "dependsOn": []
@@ -267,7 +276,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -329,7 +338,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -364,7 +373,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -399,7 +408,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -448,7 +457,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -483,7 +492,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -518,7 +527,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -567,7 +576,7 @@
                                                 },
                                                 "userProperties": [],
                                                 "linkedServiceName": {
-                                                    "referenceName": "LS_OnPremSql",
+                                                    "referenceName": "AzureSqlMI1",
                                                     "type": "LinkedServiceReference"
                                                 },
                                                 "typeProperties": {
@@ -637,7 +646,7 @@
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/DS_OnPremSqlConfig')]",
-                "[concat(variables('factoryId'), '/linkedServices/LS_OnPremSql')]"
+                "[concat(variables('factoryId'), '/linkedServices/AzureSqlMI1')]"
             ]
         },
         {
@@ -664,11 +673,46 @@
                         }
                     },
                     {
+                        "name": "Refresh_ExecutionOrder",
+                        "type": "Script",
+                        "dependsOn": [
+                            {
+                                "activity": "Set_EffectiveRunId",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "00:30:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "linkedServiceName": {
+                            "referenceName": "LS_OnPremSql",
+                            "type": "LinkedServiceReference"
+                        },
+                        "typeProperties": {
+                            "scripts": [
+                                {
+                                    "type": "Query",
+                                    "text": {
+                                        "value": "EXEC dbo.usp_AdfRefreshTableExecutionOrder;",
+                                        "type": "Expression"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "Lookup_BackupConfig",
                         "type": "Lookup",
                         "dependsOn": [
                             {
-                                "activity": "Set_EffectiveRunId",
+                                "activity": "Refresh_ExecutionOrder",
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
@@ -685,7 +729,7 @@
                         "typeProperties": {
                             "source": {
                                 "type": "AzureSqlSource",
-                                "sqlReaderQuery": "SELECT TableSchema, TableName, TargetFolder, FilterColumn, UseDateRange FROM dbo.AdfBackupConfig WHERE BackupEnabled = 1 AND (Enabled = 1 OR Enabled IS NULL)",
+                                "sqlReaderQuery": "SELECT c.TableSchema, c.TableName, c.TargetFolder, c.FilterColumn, c.UseDateRange FROM dbo.AdfBackupConfig c INNER JOIN dbo.AdfTableExecutionOrder e ON e.SchemaName = c.TableSchema AND e.TableName = c.TableName WHERE c.BackupEnabled = 1 AND (c.Enabled = 1 OR c.Enabled IS NULL) AND e.IsEnabled = 1 ORDER BY e.BackupOrderLevel, c.TableSchema, c.TableName",
                                 "partitionOption": "None"
                             },
                             "dataset": {
@@ -713,7 +757,7 @@
                                 "value": "@activity('Lookup_BackupConfig').output.value",
                                 "type": "Expression"
                             },
-                            "isSequential": false,
+                            "isSequential": true,
                             "activities": [
                                 {
                                     "name": "Log_Backup_Running",
@@ -728,7 +772,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -880,7 +924,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -915,7 +959,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -966,7 +1010,7 @@
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/DS_OnPremSqlConfig')]",
-                "[concat(variables('factoryId'), '/linkedServices/LS_OnPremSql')]",
+                "[concat(variables('factoryId'), '/linkedServices/AzureSqlMI1')]",
                 "[concat(variables('factoryId'), '/datasets/DS_OnPremSqlTable')]",
                 "[concat(variables('factoryId'), '/datasets/DS_BlobParquet')]"
             ]
@@ -995,11 +1039,46 @@
                         }
                     },
                     {
+                        "name": "Refresh_ExecutionOrder",
+                        "type": "Script",
+                        "dependsOn": [
+                            {
+                                "activity": "Set_EffectiveRunId",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "00:30:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "linkedServiceName": {
+                            "referenceName": "LS_OnPremSql",
+                            "type": "LinkedServiceReference"
+                        },
+                        "typeProperties": {
+                            "scripts": [
+                                {
+                                    "type": "Query",
+                                    "text": {
+                                        "value": "EXEC dbo.usp_AdfRefreshTableExecutionOrder;",
+                                        "type": "Expression"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "Lookup_RestoreConfig",
                         "type": "Lookup",
                         "dependsOn": [
                             {
-                                "activity": "Set_EffectiveRunId",
+                                "activity": "Refresh_ExecutionOrder",
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
@@ -1016,7 +1095,7 @@
                         "typeProperties": {
                             "source": {
                                 "type": "AzureSqlSource",
-                                "sqlReaderQuery": "SELECT TableSchema, TableName, TargetFolder, UseDateRange FROM dbo.AdfBackupConfig WHERE RestoreEnabled = 1 AND (Enabled = 1 OR Enabled IS NULL)",
+                                "sqlReaderQuery": "SELECT c.TableSchema, c.TableName, c.TargetFolder FROM dbo.AdfBackupConfig c INNER JOIN dbo.AdfTableExecutionOrder e ON e.SchemaName = c.TableSchema AND e.TableName = c.TableName WHERE c.RestoreEnabled = 1 AND (c.Enabled = 1 OR c.Enabled IS NULL) AND e.IsEnabled = 1 ORDER BY e.RestoreOrderLevel, c.TableSchema, c.TableName",
                                 "partitionOption": "None"
                             },
                             "dataset": {
@@ -1044,7 +1123,7 @@
                                 "value": "@activity('Lookup_RestoreConfig').output.value",
                                 "type": "Expression"
                             },
-                            "isSequential": false,
+                            "isSequential": true,
                             "activities": [
                                 {
                                     "name": "Log_Restore_Running",
@@ -1059,7 +1138,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -1149,7 +1228,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -1184,7 +1263,7 @@
                                     },
                                     "userProperties": [],
                                     "linkedServiceName": {
-                                        "referenceName": "LS_OnPremSql",
+                                        "referenceName": "AzureSqlMI1",
                                         "type": "LinkedServiceReference"
                                     },
                                     "typeProperties": {
@@ -1235,7 +1314,7 @@
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/DS_OnPremSqlConfig')]",
-                "[concat(variables('factoryId'), '/linkedServices/LS_OnPremSql')]",
+                "[concat(variables('factoryId'), '/linkedServices/AzureSqlMI1')]",
                 "[concat(variables('factoryId'), '/datasets/DS_BlobParquet')]",
                 "[concat(variables('factoryId'), '/datasets/DS_OnPremSqlTable')]"
             ]

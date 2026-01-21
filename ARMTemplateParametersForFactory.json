@@ -8,9 +8,6 @@
         "LS_AzureBlob_connectionString": {
             "value": ""
         },
-        "LS_OnPremSql_password": {
-            "value": ""
-        },
         "LS_OnPremSql_properties_typeProperties_server": {
             "value": "adfpocsqlserver123.database.windows.net"
         },
@@ -19,6 +16,12 @@
         },
         "LS_OnPremSql_properties_typeProperties_userName": {
             "value": "sqladmin"
+        },
+        "LS_OnPremSql_properties_typeProperties_passwordSecretName": {
+            "value": "<your-sql-password-secret-name>"
+        },
+        "LS_OnPremSql_properties_typeProperties_integrationRuntime": {
+            "value": "SelfHostedIRName"
         },
         "AzureKeyVault1_properties_typeProperties_baseUrl": {
             "value": "https://bt-sudhakar-eastus-kv-01.vault.azure.net/"
